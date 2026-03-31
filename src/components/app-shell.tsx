@@ -64,7 +64,6 @@ useEffect(()=>{
         }}
       >
       
-          
         <Header
           toggleSidebar={() => setOpened((o) => !o)}
           toggleCollapsed={() => setCollapsed((c) => !c)}
