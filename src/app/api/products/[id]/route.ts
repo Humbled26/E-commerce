@@ -18,7 +18,7 @@ export async function PUT (req: Request, {params}: {params: Params}){
   `;
   return NextResponse.json({success:true});
 }
-
+ 
 export async function DELETE (req:Request, { params}: {params: Params}){
   await sql `
   DELETE FROM products WHERE id = ${params.id};`

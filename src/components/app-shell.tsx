@@ -1,54 +1,80 @@
 "use client";
 
-import { AppShell } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Box } from "@mantine/core";
+import {useEffect, useState, ReactNode } from "react";
 import Sidebar from "./sidebar";
-import React, { useEffect, useState } from "react";
 import Header from "./header";
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
+export default function AppLayout({ children }: { children: ReactNode }) {
+  const [opened, setOpened] = useState(false);
+const [collapsed,setCollapsed]= useState(false);
+const [isMobile,setIsMobile]= useState(false);
 
-function AppLayout({ children }: AppLayoutProps) {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-
-  const [mounted, setMounted] = React.useState(false);
-  useEffect(() => setMounted(true), []);
-
-  const handleToggle = () => {
-    toggleMobile();
-    toggleDesktop();
+useEffect(()=>{
+  const checkScreen=()=>{
+    setIsMobile(window.innerWidth < 768);
   };
 
-  if (!mounted) return null;
+  checkScreen();
+  window.addEventListener("resize",checkScreen);
+
+  return()=> window.removeEventListener("resize",checkScreen);
+},[]);
 
   return (
-    <AppShell
-      padding="md"
-      header={{ height: 60 }}
-      navbar={{
-        width: { base: 220, sm: 250 },
-        breakpoint: "sm",
-        collapsed: {
-          mobile: !mobileOpened,
-          desktop: !desktopOpened,
-        },
-      }}
-      layout="alt"
-    >
-      <AppShell.Header>
-        <Header toggleSidebar={handleToggle} />
-      </AppShell.Header>
+    <Box style={{ display: "flex", height: "100vh" }}>
+      {/* overlay for mobile */}
+      {isMobile && opened && (
+        <Box
+        onClick={()=>setOpened(false)}
+        style={{
+          position:"fixed",
+          inset:0,
+          background:"rgba(0,0,0,0.5)",
+        zIndex:999,
+        }}
+        />
+      )}
+      {/* Sidebar */}
+      <Box
+        style={{
+          width: isMobile ? 220 :collapsed ? 50 :220,
+          position: isMobile ? "fixed" : "relative",
+          height: "100%",
+          top:0,
+          left:isMobile ? (opened ? 0 : -220) :0,
+          transition: "width 200ms ease",
+          overflow: "hidden",
+          borderRight: "1px solid var(--mantine-color-gray-4)",
+          zIndex: 1000,
+          background: "var(--mantine-color-body)",
+        }}
+      >
+        <Sidebar collapsed={!opened} closeSidebar={() => setOpened(false)} />
+      </Box>
 
-      <AppShell.Navbar>
-        <Sidebar closeSidebar={handleToggle} />
-      </AppShell.Navbar>
+      {/* Main content */}
+      <Box
+       style={{
+          flex: 1,
+          marginLeft:isMobile ? 0 : 0,
+          transition: "all 250ms ease",
+          width: "100%",
+          minHeight: "100vh",
+        }}
+      >
+      
+          
+        <Header
+          toggleSidebar={() => setOpened((o) => !o)}
+          toggleCollapsed={() => setCollapsed((c) => !c)}
+          isMobile={isMobile}
+          opened={opened}
+          collapsed={collapsed}
+        />
 
-      <AppShell.Main>{children}</AppShell.Main>
-    </AppShell>
+        <Box p="md">{children}</Box>
+      </Box>
+    </Box>
   );
 }
-
-export default AppLayout;

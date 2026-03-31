@@ -8,22 +8,48 @@ import {
   Avatar,
   UnstyledButton,
 } from "@mantine/core";
-import { PanelLeft, Sun, Moon, Bell, Pointer } from "lucide-react";
-import { useMantineColorScheme } from "@mantine/core";
+import { PanelLeft, PanelLeftClose, Sun, Moon, Bell } from "lucide-react";
+import { useMantineColorScheme, useComputedColorScheme } from "@mantine/core";
 
 interface HeaderProps {
   toggleSidebar: () => void;
+  toggleCollapsed: () => void;
+  isMobile: boolean;
+  opened: boolean;
+  collapsed: boolean;
 }
 
-function Header({ toggleSidebar }: HeaderProps) {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const isDarkMode = colorScheme === "dark";
-  const toggleDarkMode = () => toggleColorScheme();
+function Header({
+  toggleSidebar,
+  toggleCollapsed,
+  isMobile,
+  collapsed,
+}: HeaderProps) {
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light");
+  const isDarkMode = computedColorScheme === "dark";
+
+  const toggleColorScheme = () => {
+    setColorScheme(isDarkMode ? "light" : "dark");
+  };
 
   return (
-    <Group justify="space-between" align="center" h={60} p="xs">
+    <Group
+      justify="space-between"
+      align="center"
+      h={60}
+      p="xs"
+      style={{borderBottom: "1px solid var(--mantine-color-gray-4)",
+        background: "var(--mantine-color-body)",
+        position: "sticky",
+        top: 0,
+        zIndex: 999,
+      }}
+    >
       {/* left site */}
       <Group gap="lg" p="xs" align="center">
+        {/* mobile collapse button */}
+        {isMobile ? (
         <ActionIcon
           variant="subtle"
           color="gray"
@@ -32,20 +58,33 @@ function Header({ toggleSidebar }: HeaderProps) {
         >
           <PanelLeft size={20} />
         </ActionIcon>
+        ) : (
+          // desktop collapse button
+          <ActionIcon variant="subtle" color="gray" size="lg" onClick={toggleCollapsed}
+          >
+            <PanelLeftClose
+            size={20}
+            style={{transform: collapsed ? "rotate(180deg)" :"rotate(0deg)",
+              transition:"transform 250ms ease",
+            }}
+            />
+          </ActionIcon>
+        )}
       </Group>
+
       {/* rightside */}
-      <Group gap="xl">
+      <Group gap="lg"> 
         <Group gap="md">
           <UnstyledButton
-            onClick={() => toggleColorScheme()}
+            onClick={toggleColorScheme}
             style={{
               position: "relative",
               width: "35px",
               height: "20px",
               borderRadius: "20px",
-              backgroundColor: "1c1f24",
+              backgroundColor: "#1c1f24",
               border: "2px solid #808080",
-              boxShadow: "0 0 2px rgba(34, 139,230, 0.6)",
+              boxShadow: "0 0 2px rgba(0,0,0, 0.4)",
               display: "flex",
               alignItems: "center",
               justfyBetween: "center",

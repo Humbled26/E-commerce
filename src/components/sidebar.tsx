@@ -2,7 +2,6 @@
 
 import {
   Group,
-  Image,
   NavLink,
   Box,
   Stack,
@@ -13,7 +12,6 @@ import {
   X,
   BaggageClaim,
   ChartNoAxesCombined,
-  ChevronRight,
   Layers,
   LogOutIcon,
   NotepadText,
@@ -22,10 +20,13 @@ import {
   Settings2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-function Sidebar({ closeSidebar }: { closeSidebar: () => void }) {
-  const [dashboardOpen, setDashboardOpen] = useState(false);
+interface SidebarProps {
+  collapsed:boolean;
+closeSidebar:()=> void;
+}
+
+function Sidebar ({ closeSidebar} : SidebarProps){
 
   return (
     <Stack align="stretch" justify="start" gap="md" h="100%">
@@ -51,40 +52,17 @@ function Sidebar({ closeSidebar }: { closeSidebar: () => void }) {
       <Divider c="gray" />
       <Stack gap={2} p="xs">
         <NavLink
-          label="Dashboard"
-          leftSection={<Layers size={16} />}
-          rightSection={
-            <ChevronRight
-              size={14}
-              strokeWidth={2}
-              style={{
-                transition: `transform 200ms ease`,
-                transform: dashboardOpen ? `rotate(90deg)` : `none`,
-              }}
-            />
-          }
-        >
-          <NavLink
-            component={Link}
-            href="/"
-            label="Overview"
-            onClick={() => console.log("Navigate to Overview")}
-            leftSection={
-              <Box
-                style={{
-                  width: 4,
-                  height: 4,
-                  borderRadius: `50%`,
-                  backgroundColor: `var(--mantine-primary-color-filled)`,
-                }}
-              />
-            }
-          />
-        </NavLink>
+        component={Link}
+        href={"/"}
+        onClick={closeSidebar}
+        label="Dashboard"
+        leftSection={<Layers size={16}/>}
+        ></NavLink>
 
         <NavLink
           component={Link}
           href="/inventory"
+          onClick={closeSidebar}
           label="Inventory"
           leftSection={<ChartNoAxesCombined size={16} />}
         />
@@ -92,6 +70,7 @@ function Sidebar({ closeSidebar }: { closeSidebar: () => void }) {
         <NavLink
           component={Link}
           href="/products"
+          onClick={closeSidebar}
           label="Products"
           leftSection={<Package size={16} />}
         />
@@ -99,12 +78,14 @@ function Sidebar({ closeSidebar }: { closeSidebar: () => void }) {
         <NavLink
           component={Link}
           href="/orders"
+          onClick={closeSidebar}
           label="Orders"
           leftSection={<BaggageClaim size={16} />}
         />
         <NavLink
           component={Link}
           href="/expenses"
+          onClick={closeSidebar}
           label="Expenses"
           leftSection={<Receipt size={16} />}
         />
@@ -112,18 +93,21 @@ function Sidebar({ closeSidebar }: { closeSidebar: () => void }) {
         <NavLink
           component={Link}
           href="/reports"
+          onClick={closeSidebar}
           label="Reports"
           leftSection={<NotepadText size={16} />}
         />
         <NavLink
           component={Link}
           href="/settings"
+          onClick={closeSidebar}
           label="Settings"
           leftSection={<Settings2 size={16} />}
         />
         <NavLink
           component={Link}
           href="/logout"
+          onClick={closeSidebar}
           label="Logout"
           leftSection={<LogOutIcon size={16} />}
         />

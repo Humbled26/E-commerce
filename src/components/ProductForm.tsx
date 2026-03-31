@@ -1,6 +1,6 @@
 "use client";
 
-import { TextInput, NumberInput, Button } from "@mantine/core";
+import { TextInput, Button } from "@mantine/core";
 import { useState } from "react";
 
 export default function ProductForm() {
