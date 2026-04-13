@@ -6,14 +6,19 @@ export async function GET (){
   return NextResponse.json(products);
 }
 
-export async function POST(request: Request){
-  const body = await request.json();
-  
-  const {name,price,quantity,category}=body;
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  const body = await req.json();
+  const {id,name,category,quantity,price} = body;
 
- await sql`
-    INSERT INTO products (name, price, quantity, category)
-    VALUES (${name}, ${price}, ${quantity}, ${category})
+  const results = await sql`
+  UPDATED products
+  SET id = ${id},
+  name = ${name},
+  category = ${category},
+  quantity = ${quantity},
+  price = ${price}
+  WHERE id = ${params.id}
   `;
-  return NextResponse.json({success:true});
+
+  return NextResponse.json(results[0]);
 }

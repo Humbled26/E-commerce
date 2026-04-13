@@ -18,6 +18,7 @@ import {
   Package,
   Receipt,
   Settings2,
+  ChartColumnDecreasing,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -57,17 +58,9 @@ function Sidebar ({ closeSidebar} : SidebarProps){
         onClick={closeSidebar}
         label="Dashboard"
         leftSection={<Layers size={16}/>}
-        ></NavLink>
-
-        <NavLink
-          component={Link}
-          href="/inventory"
-          onClick={closeSidebar}
-          label="Inventory"
-          leftSection={<ChartNoAxesCombined size={16} />}
         />
 
-        <NavLink
+          <NavLink
           component={Link}
           href="/products"
           onClick={closeSidebar}
@@ -77,9 +70,26 @@ function Sidebar ({ closeSidebar} : SidebarProps){
 
         <NavLink
           component={Link}
-          href="/orders"
+          href="/inventory"
           onClick={closeSidebar}
-          label="Orders"
+          label="Inventory"
+          leftSection={<ChartNoAxesCombined size={16} />}
+        />
+
+         <NavLink
+          component={Link}
+          href="/sales"
+          onClick={closeSidebar}
+          label="Sales"
+          leftSection={<ChartColumnDecreasing size={16} />}
+        />
+
+
+        <NavLink
+          component={Link}
+          href="/purchases"
+          onClick={closeSidebar}
+          label="Purchases"
           leftSection={<BaggageClaim size={16} />}
         />
         <NavLink
